@@ -2,7 +2,10 @@
     "extends": ["airbnb-base","prettier","plugin:node/recommended"],
     "plugins": ["prettier"],
     "rules": {
-        "prettier/prettier":["warn",{"singleQuote": true, "parser": "flow","semi":"off"}],
-        "no-console":"off"
+        
+        "no-console":"off",
+        "func-names":"off",
+        "object-shorthand":"off",
+        "no-underscore-dangle":"off"
     }
 }
