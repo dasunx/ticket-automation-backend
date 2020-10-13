@@ -3,9 +3,20 @@ const expressJwt = require('express-jwt'); // to protect routes by checking toke
 
 const HttpError = require('../models/http-error');
 const User = require('../models/user');
+const Manager = require('../models/manager');
+const Foreigner = require('../models/foreigner');
+const Local = require('../models/local');
 
 const signup = async (req, res, next) => {
-  const { name, email, password } = req.body;
+  const {
+    name,
+    email,
+    password,
+    managerId,
+    native,
+    nic,
+    passportId,
+  } = req.body;
   let user;
   try {
     user = await User.findOne({ email: email });
@@ -22,8 +33,14 @@ const signup = async (req, res, next) => {
       error: 'email has already been registerd. Please Login.',
     });
   }
-
-  const newUser = new User({ name, email, password });
+  let newUser;
+  if (managerId) {
+    newUser = new Manager({ name, email, password, managerId, role:"Manager" });
+  } else if (native === true) {
+    newUser = new Local({ name, email, password, nic, role:"Local" });
+  } else if (native === false) {
+    newUser = new Foreigner({ name, email, password, passportId, role:"Foreigner" });
+  }
   try {
     await newUser.save();
   } catch (err) {
