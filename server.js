@@ -5,8 +5,9 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 require('dotenv').config();
 
-const authRoutes = require('./routes/auth-route');
 const HttpError = require('./models/http-error');
+const authRoutes = require('./routes/auth-route');
+const paymentRoutes=require('./routes/payment-route');
 
 // db connection
 mongoose
@@ -32,6 +33,7 @@ if (process.env.NODE_ENV === 'development') {
 }
 // routes middleware
 app.use('/api/auth', authRoutes);
+app.use('/api/payment', paymentRoutes);
 
 // Error Handler
 app.use(() => {
