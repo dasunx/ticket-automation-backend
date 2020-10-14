@@ -35,11 +35,23 @@ const signup = async (req, res, next) => {
   }
   let newUser;
   if (managerId) {
-    newUser = new Manager({ name, email, password, managerId, role:"Manager" });
+    newUser = new Manager({
+      name,
+      email,
+      password,
+      managerId,
+      role: 'Manager',
+    });
   } else if (native === true) {
-    newUser = new Local({ name, email, password, nic, role:"Local" });
+    newUser = new Local({ name, email, password, nic, role: 'Local' });
   } else if (native === false) {
-    newUser = new Foreigner({ name, email, password, passportId, role:"Foreigner" });
+    newUser = new Foreigner({
+      name,
+      email,
+      password,
+      passportId,
+      role: 'Foreigner',
+    });
   }
   try {
     await newUser.save();
@@ -50,8 +62,24 @@ const signup = async (req, res, next) => {
     );
     return next(error);
   }
-
-  res.json({ msg: 'You have successfully signed up!! ' });
+  let token;
+  try {
+    token = jwt.sign({ _id: newUser._id }, process.env.JWT_SECRET, {
+      expiresIn: '1h',
+    });
+    // generate a cookie with the token
+    res.cookie('token', token, { expiresIn: '1h' });
+    // send user details and token to the front end
+    
+  } catch (err) {
+    const error = new HttpError(`sigining up faild, toke creation error!+${err}`, 500);
+    return next(error);
+  }
+  const { _id, role } = newUser;
+  return res.json({
+    token,
+    user: { _id, name, email, role },
+  });
 };
 
 const login = async (req, res, next) => {
@@ -88,6 +116,36 @@ const login = async (req, res, next) => {
   });
 };
 
+const managerInfo = async (req, res, next) => {
+  const managerUserId = req.user._id; //  retrived from requiredSignin middleware
+  
+  let manager;
+  try {
+    manager = await User.findById({ _id: managerUserId }, '-hashed_password');
+  } catch (err) {
+    const error = new HttpError(
+      'something went wrong on the db, when retriving the given manager',
+      500
+    );
+    return next(error);
+  }
+
+  if (!manager) {
+    return res.status(400).json({
+      error: 'Manger not found',
+    });
+  }
+  if (manager.role !== 'Manager') {
+    //  admin ->1 , user -> 0
+    return res.status(400).json({
+      error: 'Manager resources, Access denied!',
+    });
+  }
+
+  req.profile = manager;
+  next();
+};
+
 /*
  * Checks the token validity
  * We can use this to protect routes which only meant to access by loggedIn users.
@@ -101,3 +159,4 @@ const requireSignIn = expressJwt({
 exports.signup = signup;
 exports.login = login;
 exports.requireSignIn = requireSignIn;
+exports.managerInfo = managerInfo;
