@@ -10,6 +10,7 @@ const authRoutes = require('./routes/auth-route');
 const paymentRoutes=require('./routes/payment-route');
 const busRoutes=require('./routes/bus-route');
 const busRouteRoutes=require('./routes/bus-route-route');
+const journeyRoutes=require('./routes/journey-route');
 // db connection
 mongoose
   .connect(process.env.DATABASE, { useNewUrlParser: true })
@@ -37,7 +38,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/payment', paymentRoutes);
 app.use('/api/bus',busRoutes);
 app.use('/api/bus-route', busRouteRoutes);
-
+app.use('/api/journey',journeyRoutes);
 // Error Handler
 app.use(() => {
   const error = new HttpError('page not found!', 404);
