@@ -11,20 +11,24 @@ const Foreigner = User.discriminator(
         type: String,
         required: true,
       },
-      balance:{
-          type: Number,
-          default:0.00
+      balance: {
+        type: Number,
+        default: 0.0,
       },
-      ongoing:{
-          type:Boolean,
-          default:false,
+      ongoing: {
+        type: Boolean,
+        default: false,
       },
-      journey:{
-          type:mongoose.Types.ObjectId,ref:'Journey'
+      journey: {
+        type: mongoose.Types.ObjectId,
+        ref: 'Journey',
       },
-      paymentHistory:[{
-        type:mongoose.Types.ObjectId,ref:'Payment'
-      }]
+      paymentHistory: [
+        {
+          type: mongoose.Types.ObjectId,
+          ref: 'Payment',
+        },
+      ],
     },
     options
   )
