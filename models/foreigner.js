@@ -21,7 +21,10 @@ const Foreigner = User.discriminator(
       },
       journey:{
           type:mongoose.Types.ObjectId,ref:'Journey'
-      }
+      },
+      paymentHistory:[{
+        type:mongoose.Types.ObjectId,ref:'Payment'
+      }]
     },
     options
   )
