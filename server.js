@@ -8,7 +8,8 @@ require('dotenv').config();
 const HttpError = require('./models/http-error');
 const authRoutes = require('./routes/auth-route');
 const paymentRoutes=require('./routes/payment-route');
-
+const busRoutes=require('./routes/bus-route');
+const busRouteRoutes=require('./routes/bus-route-route');
 // db connection
 mongoose
   .connect(process.env.DATABASE, { useNewUrlParser: true })
@@ -34,6 +35,8 @@ if (process.env.NODE_ENV === 'development') {
 // routes middleware
 app.use('/api/auth', authRoutes);
 app.use('/api/payment', paymentRoutes);
+app.use('/api/bus',busRoutes);
+app.use('/api/bus-route', busRouteRoutes);
 
 // Error Handler
 app.use(() => {
