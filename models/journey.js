@@ -5,6 +5,7 @@ const ProductSchema = new mongoose.Schema({
   endPlace: { type: String, required: true },
   startTime: { type: Date, default: Date.now },
   endTime: { type: Date },
+  cost: { type: Number, default: 0.0 },
   passengerId: { type: mongoose.Types.ObjectId, required: true, ref: 'User' },
 });
 

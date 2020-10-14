@@ -22,7 +22,7 @@ const signup = async (req, res, next) => {
     user = await User.findOne({ email: email });
   } catch (err) {
     const error = new HttpError(
-      'something went wrong on the db, when retriving Products',
+      'something went wrong on the db, when retriving User',
       500
     );
     return next(error);
@@ -57,7 +57,7 @@ const signup = async (req, res, next) => {
     await newUser.save();
   } catch (err) {
     const error = new HttpError(
-      'something went wrong on the db, when retriving Products',
+      'something went wrong on the db, when saving the user in db',
       500
     );
     return next(error);
