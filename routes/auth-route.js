@@ -16,7 +16,7 @@ router.get('/test',((req,res)=>{
 
 // router.get('/signout',authController.signout);
 
-router.get('/secret',authController.requireSignIn,(req,res)=>{
+router.get('/secret',authController.requireSignIn,authController.managerInfo,(req,res)=>{
     res.json({user:req.user})
 }); 
 
