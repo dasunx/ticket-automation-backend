@@ -151,7 +151,7 @@ const userInfo = async (req, res, next) => {
   const {uid} = req.params;
   let user;
   try {
-    user = await User.findById({_id:uid}, '-hashed_password').populate('paymentHistory').populate({path:'journey', populate:{path: 'busId'}});
+    user = await User.findById({_id:uid}, '-hashed_password').populate('paymentHistory').populate({path:'journey', populate:{path: 'busId'}}).populate({path:'journeyHistory', populate:{path: 'busId'}});
     if(!user){
       return res.status(400).json({
         error: 'No user found',
