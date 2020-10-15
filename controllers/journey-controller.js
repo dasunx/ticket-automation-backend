@@ -159,6 +159,7 @@ const endJourney = async (userId, busId, location, res, next) => {
   passenger.ongoing = false;
   passenger.balance -= total;
   // save both of them in db
+  passenger.journeyHistory.unshift(currentJourney);
   try {
     await currentJourney.save();
     await passenger.save();

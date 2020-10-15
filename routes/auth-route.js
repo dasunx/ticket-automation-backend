@@ -14,6 +14,7 @@ router.get('/test',((req,res)=>{
     });
 }));
 
+router.get('/me/:uid', authController.userInfo);
 // router.get('/signout',authController.signout);
 
 router.get('/secret',authController.requireSignIn,authController.managerInfo,(req,res)=>{

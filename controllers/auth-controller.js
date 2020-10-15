@@ -146,6 +146,26 @@ const managerInfo = async (req, res, next) => {
   next();
 };
 
+
+const userInfo = async (req, res, next) => {
+  const {uid} = req.params;
+  let user;
+  try {
+    user = await User.findById({_id:uid}, '-hashed_password').populate('paymentHistory').populate({path:'journey', populate:{path: 'busId'}}).populate({path:'journeyHistory', populate:{path: 'busId'}});
+    if(!user){
+      return res.status(400).json({
+        error: 'No user found',
+      });
+    }
+    return res.json(user);
+  } catch (err) {
+    const error = new HttpError(
+      'something went wrong on the db, when retriving the given manager',
+      500
+    );
+    return next(error);
+  }
+}
 /*
  * Checks the token validity
  * We can use this to protect routes which only meant to access by loggedIn users.
@@ -160,3 +180,4 @@ exports.signup = signup;
 exports.login = login;
 exports.requireSignIn = requireSignIn;
 exports.managerInfo = managerInfo;
+exports.userInfo = userInfo;
