@@ -29,6 +29,10 @@ const Foreigner = User.discriminator(
           ref: 'Payment',
         },
       ],
+      journeyHistory:[{
+        type: mongoose.Types.ObjectId,
+        ref: 'Journey',
+      }],
     },
     options
   )

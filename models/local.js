@@ -25,7 +25,11 @@ const Local = User.discriminator(
       },
       paymentHistory:[{
         type:mongoose.Types.ObjectId,ref:'Payment'
-      }]
+      }], 
+      journeyHistory:[{
+        type: mongoose.Types.ObjectId,
+        ref: 'Journey',
+      }],
     },
     options
   )

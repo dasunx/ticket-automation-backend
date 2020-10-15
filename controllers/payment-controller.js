@@ -33,7 +33,7 @@ const addPayment = async (req, res, next) => {
     sess.startTransaction();
     await newPayment.save({ session: sess });
     user.balance += amount;
-    user.paymentHistory.push(newPayment);
+    user.paymentHistory.unshift(newPayment);
     await user.save({ session: sess });
     sess.commitTransaction();
   } catch (err) {
