@@ -71,14 +71,14 @@ const signup = async (req, res, next) => {
     res.cookie('token', token, { expiresIn: '1h' });
     // send user details and token to the front end
     
-  } catch (err) {
+  } catch (err) { 
     const error = new HttpError(`sigining up faild, toke creation error!+${err}`, 500);
     return next(error);
   }
-  const { _id, role } = newUser;
+  const { _id, role, balance } = newUser;
   return res.json({
     token,
-    user: { _id, name, email, role },
+    user: { _id, name, email, role , balance},
   });
 };
 
@@ -108,11 +108,11 @@ const login = async (req, res, next) => {
   // generate a cookie with the token
   res.cookie('token', token, { expiresIn: '1h' });
   // send user details and token to the front end
-  const { _id, name, role } = user;
+  const { _id, name, role, balance } = user;
 
   return res.json({
     token,
-    user: { _id, name, email, role },
+    user: { _id, name, email, role, balance },
   });
 };
 
