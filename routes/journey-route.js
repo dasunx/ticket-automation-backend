@@ -5,5 +5,5 @@ const router=express.Router();
 
 router.post('/begin',beginJourney);
 router.post('/end',endJourney);
-router.get('/stat/:uid',journeyStatus);
+router.post('/stat',journeyStatus);
 module.exports=router;
