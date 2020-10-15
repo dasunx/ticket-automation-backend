@@ -4,8 +4,8 @@ const HttpError = require('../models/http-error');
 const Journey = require('../models/journey');
 const User = require('../models/user');
 
-const beginJourney = async (req, res, next) => {
-  const { userId, busId, startLocation } = req.body;
+const beginJourney = async ( userId, busId, location, res, next) => {
+  
   // check passenger id validity
   let passenger;
   try {
@@ -47,11 +47,11 @@ const beginJourney = async (req, res, next) => {
   }
   // selected place validity
   const selectedPlace = selectedBus.route.route.filter(
-    (p) => p.name === startLocation
+    (p) => p.name === location
   )[0]; // check that given place is in the route
   if (!selectedPlace) {
     const error = new HttpError(
-      'Selected place not in the route, system fault!',
+      'Selected place not in the route, system fault!!',
       500
     );
     return next(error);
@@ -82,8 +82,8 @@ const beginJourney = async (req, res, next) => {
   res.status(201).json({ journey: newJourney });
 };
 
-const endJourney = async (req, res, next) => {
-  const { userId, busId, endLocation } = req.body;
+const endJourney = async (userId, busId, location, res, next) => {
+  
   // check passenger id validity
   let passenger;
   try {
@@ -116,7 +116,7 @@ const endJourney = async (req, res, next) => {
   }
   // selected place validity
   const selectedPlace = selectedBus.route.route.filter(
-    (p) => p.name === endLocation
+    (p) => p.name === location
   )[0]; // check that given place is in the route
   if (!selectedPlace) {
     const error = new HttpError(
@@ -173,11 +173,11 @@ const endJourney = async (req, res, next) => {
 };
 
 const journeyStatus = async (req, res, next) => {
-  const { uid } = req.params;
+  const { userId, busId, location } = req.body;
   // check passenger id validity
   let passenger;
   try {
-    passenger = await User.findById(uid);
+    passenger = await User.findById(userId);
   } catch (err) {
     const error = new HttpError(
       'something went wrong on the db, when retriving User',
@@ -191,9 +191,10 @@ const journeyStatus = async (req, res, next) => {
   }
   const journeyStat = passenger.ongoing;
   if (journeyStat === false) {
-    res.status(201).json({ msg: 'start the journey', status: true });
+    // res.status(201).json({ msg: 'start the journey', status: true });
+    beginJourney(userId, busId, location, res, next);
   } else {
-    res.status(201).json({ msg: 'end the journey', status: false });
+    endJourney(userId, busId, location, res, next);
   }
 };
 
