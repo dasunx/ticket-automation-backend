@@ -79,7 +79,7 @@ const beginJourney = async ( userId, busId, location, res, next) => {
     return next(error);
   }
 
-  res.status(201).json({ journey: newJourney });
+  res.status(201).json({ journey: newJourney, status:"start", passengerName:passenger.name });
 };
 
 const endJourney = async (userId, busId, location, res, next) => {
@@ -158,7 +158,7 @@ const endJourney = async (userId, busId, location, res, next) => {
   passenger.journey = null;
   passenger.ongoing = false;
   passenger.balance -= total;
-  // save both of them
+  // save both of them in db
   try {
     await currentJourney.save();
     await passenger.save();
@@ -169,7 +169,7 @@ const endJourney = async (userId, busId, location, res, next) => {
     );
     return next(error);
   }
-  res.status(201).json({ journey: currentJourney });
+  res.status(201).json({ journey: currentJourney, status:"end", passengerName:passenger.name });
 };
 
 const journeyStatus = async (req, res, next) => {
