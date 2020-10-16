@@ -12,7 +12,7 @@ const beginJourney = async ( userId, busId, location, res, next) => {
     passenger = await User.findById(userId);
   } catch (err) {
     const error = new HttpError(
-      'something went wrong on the db, when retriving User',
+      'something went wrong on the db, when retrieving the User',
       500
     );
     return next(error);
@@ -33,14 +33,14 @@ const beginJourney = async ( userId, busId, location, res, next) => {
     return next(error);
   }
   if (!selectedBus) {
-    const error = new HttpError('No Bus found for given id', 500);
+    const error = new HttpError('There is not such bus found for given id', 500);
     return next(error);
   }
   // check that user has enough money
-  const maxAmount = selectedBus.route.route.slice(-1)[0].price; // max amount for the jorney
+  const maxAmount = selectedBus.route.route.slice(-1)[0].price; // max amount for the journey
   if (passenger.balance < maxAmount) {
     const error = new HttpError(
-      'You do not have enough money to continue the journey, Please top-up your account',
+      'You balance is insufficient to continue your journey, Please top-up your account',
       500
     );
     return next(error);
@@ -51,7 +51,7 @@ const beginJourney = async ( userId, busId, location, res, next) => {
   )[0]; // check that given place is in the route
   if (!selectedPlace) {
     const error = new HttpError(
-      'Selected place not in the route, system fault!!',
+      'Selected destination is not in the route, system fault!!',
       500
     );
     return next(error);
@@ -90,7 +90,7 @@ const endJourney = async (userId, busId, location, res, next) => {
     passenger = await User.findById(userId).populate('journey');
   } catch (err) {
     const error = new HttpError(
-      'something went wrong on the db, when retriving User',
+      'something went wrong on the db, when retrieving User',
       500
     );
     return next(error);
@@ -120,7 +120,7 @@ const endJourney = async (userId, busId, location, res, next) => {
   )[0]; // check that given place is in the route
   if (!selectedPlace) {
     const error = new HttpError(
-      'Selected place not in the route, system fault!',
+      'Selected destination is not in the route, system fault!',
       500
     );
     return next(error);
@@ -146,7 +146,7 @@ const endJourney = async (userId, busId, location, res, next) => {
     return next(error);
   }
   if (!currentJourney) {
-    const error = new HttpError('No current journey found!', 500);
+    const error = new HttpError('Current journey is not found!', 500);
     return next(error);
   }
   // update the journey
@@ -165,7 +165,7 @@ const endJourney = async (userId, busId, location, res, next) => {
     await passenger.save();
   } catch (err) {
     const error = new HttpError(
-      'Something went wrong on db, when saving the both passenger and journey',
+      'Something went wrong on db, when saving details of both the passenger and the journey',
       500
     );
     return next(error);
@@ -181,7 +181,7 @@ const journeyStatus = async (req, res, next) => {
     passenger = await User.findById(userId);
   } catch (err) {
     const error = new HttpError(
-      'something went wrong on the db, when retriving User',
+      'something went wrong on the db, when retrieving the User',
       500
     );
     return next(error);

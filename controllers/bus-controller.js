@@ -17,7 +17,7 @@ const signup = async (req, res, next) => {
 
   if (bus) {
     return res.status(400).json({
-      error: 'This bus has already registered in the system. Please Login.',
+      error: 'This bus has already registered in the system. Please Login to continue.',
     });
   }
   let route;
@@ -25,7 +25,7 @@ const signup = async (req, res, next) => {
     route =await BusRoute.findById( routeId);
   } catch (err) {
     const error = new HttpError(
-      'something went wrong on the db, when finding the give route name',
+      'something went wrong on the db, when finding the given route name',
       500
     );
     return next(error);
@@ -43,7 +43,7 @@ const signup = async (req, res, next) => {
     await newBus.save();
   } catch (err) {
     const error = new HttpError(
-      'something went wrong, when saving the bus in the db',
+      'something went wrong, when saving the bus details in the db',
       500
     );
     return next(error);
@@ -58,7 +58,7 @@ const signup = async (req, res, next) => {
     // send user details and token to the front end
   } catch (err) {
     const error = new HttpError(
-      `sigining up faild, token creation error!+${err}`,
+      `signing up failed, token creation error!+${err}`,
       500
     );
     return next(error);
@@ -80,7 +80,7 @@ const login = async (req, res, next) => {
     return next(error);
   }
   if (!bus) {
-    const error = new HttpError('Bus does not exsists! Sign up instead.', 500);
+    const error = new HttpError('Bus does not exists in the system! Try signing up.', 500);
     return next(error);
   }
   // Authentication
