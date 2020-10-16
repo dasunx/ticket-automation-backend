@@ -11,13 +11,13 @@ const addPayment = async (req, res, next) => {
     console.log("Payhhere "+ payhereId);
   } catch (err) {
     const error = new HttpError(
-      'something went wrong on the db, when retriving User',
+      'something went wrong on the db, when retrieving User',
       500
     );
     return next(error);
   }
   if (!user) {
-    const error = new HttpError('Given user not found', 500);
+    const error = new HttpError('Given user is not found', 500);
     return next(error);
   }
 
@@ -40,7 +40,7 @@ const addPayment = async (req, res, next) => {
     const error = new HttpError(`Payment failed, please try again ${err}`, 500);
     return next(error);
   }
-  res.status(201).json({ payment: newPayment, msg: 'payment successfull' });
+  res.status(201).json({ payment: newPayment, msg: 'Payment is Successful' });
 };
 
 const getPaymentsByUserId = async (req, res, next) => {
