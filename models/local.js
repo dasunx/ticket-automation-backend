@@ -23,13 +23,28 @@ const Local = User.discriminator(
         type: mongoose.Types.ObjectId,
         ref: 'Journey',
       },
-      paymentHistory:[{
-        type:mongoose.Types.ObjectId,ref:'Payment'
-      }], 
-      journeyHistory:[{
-        type: mongoose.Types.ObjectId,
-        ref: 'Journey',
-      }],
+      paymentHistory: [
+        {
+          type: mongoose.Types.ObjectId,
+          ref: 'Payment',
+        },
+      ],
+      journeyHistory: [
+        {
+          type: mongoose.Types.ObjectId,
+          ref: 'Journey',
+        },
+      ],
+      fineBalance: {
+        type: Number,
+        default: 0.0,
+      },
+      fineHistory: [
+        {
+          type: mongoose.Types.ObjectId,
+          ref: 'Fine',
+        },
+      ],
     },
     options
   )
