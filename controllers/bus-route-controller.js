@@ -39,6 +39,27 @@ const getBusRouteById = async (req, res, next) => {
     res.status(201).json({ route:selectedRoute });
   };
 
+  const getAllRoutes = async (req, res, next) => {
+    let routes;
+    try {
+      routes = await busRoute.find();
+    } catch (err) {
+      const error = new HttpError(
+        'Something went wrong on server side. Please try again later!!',
+        500
+      );
+      return next(error);
+    }
+    if (!routes) {
+      const error = new HttpError('0 routes found', 500);
+      return next(error);
+    }
+    res.status(201).json({
+      routes: routes.map((r) => r.toObject({ getters: true })),
+    });
+  };
+
     
 exports.addBusRoute=addBusRoute;
 exports.getBusRouteById=getBusRouteById;
+exports.getAllRoutes=getAllRoutes;
