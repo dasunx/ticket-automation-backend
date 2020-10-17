@@ -22,7 +22,10 @@ const addPayment = async (req, res, next) => {
     return next(error);
   }
   let newPayment;
-  const balanceAfterFine = await payFines(userId, amount);
+  const balanceAfterFine = await payFines(
+    userId,
+    parseFloat(amount.toString())
+  );
 
   try {
     const sess = await mongoose.startSession();
