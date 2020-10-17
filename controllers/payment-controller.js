@@ -24,38 +24,42 @@ const addPayment = async (req, res, next) => {
   let newPayment;
   const balanceAfterFine = await payFines(userId, amount);
 
-  if (balanceAfterFine == amount) {
-    newPayment = new Payment({
-      passengerId: userId,
-      type,
-      payhereId,
-      amount,
-    });
-  } else if (balanceAfterFine < amount) {
-    newPayment = new Payment({
-      passengerId: userId,
-      type,
-      payhereId,
-      amount: balanceAfterFine,
-    });
-
-    let finePayment = new Payment({
-      passengerId: userId,
-      type: 'Fine',
-      payhereId: 'Fine',
-      amount: amount - balanceAfterFine,
-    });
-
-    user.paymentHistory.unshift(finePayment);
-    await finePayment.save();
-  }
-
   try {
     const sess = await mongoose.startSession();
     sess.startTransaction();
-    await newPayment.save({ session: sess });
+    if (balanceAfterFine == amount) {
+      newPayment = new Payment({
+        passengerId: userId,
+        type,
+        payhereId,
+        amount,
+      });
+      user.paymentHistory.unshift(newPayment);
+      await newPayment.save({ session: sess });
+    } else if (balanceAfterFine < amount) {
+      if (balanceAfterFine > 0) {
+        newPayment = new Payment({
+          passengerId: userId,
+          type,
+          payhereId,
+          amount: balanceAfterFine,
+        });
+        user.paymentHistory.unshift(newPayment);
+        await newPayment.save({ session: sess });
+      }
+
+      let finePayment = new Payment({
+        passengerId: userId,
+        type: 'Fine',
+        payhereId: 'Fine',
+        amount: amount - balanceAfterFine,
+      });
+
+      user.paymentHistory.unshift(finePayment);
+      await finePayment.save();
+    }
     user.balance += balanceAfterFine;
-    user.paymentHistory.unshift(newPayment);
+
     await user.save({ session: sess });
     sess.commitTransaction();
   } catch (err) {
