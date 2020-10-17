@@ -18,7 +18,8 @@ const addFine = async (req, res, next) => {
     let newFine;
     if (user.balance >= amount) {
       newFine = new Fine({
-        amount,
+        amount: 0.0,
+        paidAmount: amount,
         managerId,
         passengerId,
         paidTime: Date.now(),
@@ -38,7 +39,8 @@ const addFine = async (req, res, next) => {
     } else {
       if (user.balance > 0) {
         newFine = new Fine({
-          amount,
+          amount: amount - user.balance,
+          paidAmount: user.balance,
           managerId,
           passengerId,
         });
@@ -91,6 +93,7 @@ const payFines = async (userId, amount) => {
         if (fine.amount <= amount) {
           amount -= fine.amount;
           fine.amount = 0.0;
+          fine.paidAmount += fine.amount;
           fine.paid = true;
           fine.paidTime = Date.now();
           user.fineBalance -= fine.amount;
@@ -98,6 +101,7 @@ const payFines = async (userId, amount) => {
           await fine.save();
         } else {
           fine.amount -= amount;
+          fine.paidAmount += amount;
           user.fineBalance -= amount;
           amount -= amount;
           await user.save();

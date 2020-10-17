@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 
 const FineSchema = new mongoose.Schema({
   amount: { type: Number, default: 0.0 },
+  paidAmount: { type: Number, default: 0.0 },
   paid: { type: Boolean, default: false },
   managerId: { type: mongoose.Types.ObjectId, required: true, ref: 'User' },
   passengerId: { type: mongoose.Types.ObjectId, required: true, ref: 'User' },
