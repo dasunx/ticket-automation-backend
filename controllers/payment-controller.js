@@ -8,7 +8,7 @@ const addPayment = async (req, res, next) => {
   let user;
   try {
     user = await User.findById(userId);
-    console.log("Payhhere "+ payhereId);
+    // console.log("Payhhere "+ payhereId);
   } catch (err) {
     const error = new HttpError(
       'something went wrong on the db, when retrieving User',
@@ -32,7 +32,7 @@ const addPayment = async (req, res, next) => {
     const sess = await mongoose.startSession();
     sess.startTransaction();
     await newPayment.save({ session: sess });
-    user.balance += amount;
+    user.balance += parseFloat(amount);
     user.paymentHistory.unshift(newPayment);
     await user.save({ session: sess });
     sess.commitTransaction();
