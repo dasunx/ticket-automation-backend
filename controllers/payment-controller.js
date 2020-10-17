@@ -98,7 +98,7 @@ const getPaymentsByUserId = async (req, res, next) => {
 const getAllPayments = async (req, res, next) => {
   let payments;
   try {
-    payments = await Payment.find();
+    payments = await Payment.find().populate('passengerId');
   } catch (err) {
     const error = new HttpError(
       'Something went wrong on server side. Please try again later!!',
