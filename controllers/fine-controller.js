@@ -92,8 +92,9 @@ const payFines = async (userId, amount) => {
         }
         if (fine.amount <= amount) {
           amount -= fine.amount;
-          fine.amount = 0.0;
+
           fine.paidAmount += fine.amount;
+          fine.amount = 0.0;
           fine.paid = true;
           fine.paidTime = Date.now();
           user.fineBalance -= fine.amount;
