@@ -70,15 +70,17 @@ const signup = async (req, res, next) => {
     // generate a cookie with the token
     res.cookie('token', token, { expiresIn: '1h' });
     // send user details and token to the front end
-    
-  } catch (err) { 
-    const error = new HttpError(`sigining up faild, toke creation error!+${err}`, 500);
+  } catch (err) {
+    const error = new HttpError(
+      `sigining up faild, toke creation error!+${err}`,
+      500
+    );
     return next(error);
   }
   const { _id, role, balance } = newUser;
   return res.json({
     token,
-    user: { _id, name, email, role , balance},
+    user: { _id, name, email, role, balance },
   });
 };
 
@@ -118,7 +120,7 @@ const login = async (req, res, next) => {
 
 const managerInfo = async (req, res, next) => {
   const managerUserId = req.user._id; //  retrived from requiredSignin middleware
-  
+
   let manager;
   try {
     manager = await User.findById({ _id: managerUserId }, '-hashed_password');
@@ -146,13 +148,16 @@ const managerInfo = async (req, res, next) => {
   next();
 };
 
-
 const userInfo = async (req, res, next) => {
-  const {uid} = req.params;
+  const { uid } = req.params;
   let user;
   try {
-    user = await User.findById({_id:uid}, '-hashed_password').populate('paymentHistory').populate({path:'journey', populate:{path: 'busId'}}).populate({path:'journeyHistory', populate:{path: 'busId'}});
-    if(!user){
+    user = await User.findById({ _id: uid }, '-hashed_password')
+      .populate('paymentHistory')
+      .populate({ path: 'journey', populate: { path: 'busId' } })
+      .populate({ path: 'journeyHistory', populate: { path: 'busId' } })
+      .populate({ path: 'fineHistory', populate: { path: 'managerId' } });
+    if (!user) {
       return res.status(400).json({
         error: 'No user found',
       });
@@ -165,7 +170,7 @@ const userInfo = async (req, res, next) => {
     );
     return next(error);
   }
-}
+};
 /*
  * Checks the token validity
  * We can use this to protect routes which only meant to access by loggedIn users.
