@@ -199,6 +199,28 @@ const journeyStatus = async (req, res, next) => {
   }
 };
 
+const getAllJourneys = async (req, res, next) => {
+  let journeys;    
+  try {
+    journeys =await Journey.find().populate('passengerId').populate('busId');
+  } catch (err) {
+    const error = new HttpError(
+      'Something went wrong on server side. Please try again later!!',
+      500
+    );
+    return next(error);
+  }
+  if(!journeys){
+    const error = new HttpError(
+        "0 Journeys found!",
+        500
+    );
+    return next(error);
+  }
+  res.status(201).json({ journeys:journeys });
+};
+
 exports.beginJourney = beginJourney;
 exports.endJourney = endJourney;
 exports.journeyStatus = journeyStatus;
+exports.getAllJourneys=getAllJourneys;
