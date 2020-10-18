@@ -124,7 +124,9 @@ const getAllFinesByManagerId = async (req, res, next) => {
   const { managerId } = req.params;
   console.log(managerId);
   try {
-    let fines = await Fine.find({ managerId: managerId });
+    let fines = await Fine.find({ managerId: managerId }).populate(
+      'passengerId'
+    );
     if (fines.length == 0) {
       const error = new HttpError('No fines found', 404);
       return next(error);
