@@ -120,5 +120,21 @@ const payFines = async (userId, amount) => {
   }
 };
 
+const getAllFinesByManagerId = async (req, res, next) => {
+  const { managerId } = req.params;
+  console.log(managerId);
+  try {
+    let fines = await Fine.find({ managerId: managerId }).populate(
+      'passengerId'
+    );
+    if (fines.length == 0) {
+      const error = new HttpError('No fines found', 404);
+      return next(error);
+    }
+    console.log(fines);
+    return res.json(fines);
+  } catch (error) {}
+};
+exports.getAllFinesByManagerId = getAllFinesByManagerId;
 exports.addFine = addFine;
 exports.payFines = payFines;
