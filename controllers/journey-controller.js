@@ -47,7 +47,7 @@ const beginJourney = async ( userId, busId, location, res, next) => {
   }
   // selected place validity
   const selectedPlace = selectedBus.route.route.filter(
-    (p) => p.name === location
+    (p) => p.name === location.name
   )[0]; // check that given place is in the route
   if (!selectedPlace) {
     const error = new HttpError(
@@ -116,7 +116,7 @@ const endJourney = async (userId, busId, location, res, next) => {
   }
   // selected place validity
   const selectedPlace = selectedBus.route.route.filter(
-    (p) => p.name === location
+    (p) => p.name === location.name
   )[0]; // check that given place is in the route
   if (!selectedPlace) {
     const error = new HttpError(
